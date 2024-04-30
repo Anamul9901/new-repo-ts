@@ -20,7 +20,6 @@ const TaskUpdate = () => {
   const task2 = task[0];
   //   console.log(task2);
 
-  //   const { name, title, dadline, description, position, author }
   const name = task2?.name;
   const title = task2?.title;
   const dadline = task2?.dadline;
@@ -31,6 +30,20 @@ const TaskUpdate = () => {
 
   const handleUpdateTask = (e) => {
     e.preventDefault();
+    const form = e.target;
+    const name = form.name.value;
+    const title = form.title.value;
+    const dadline = form.dadline.value;
+    const description = form.description.value;
+    const position = task2?.position;
+    const author = task2?.author;
+    const updateData = { name, title, dadline, description, position, author };
+    console.log("update-", name, title, dadline, description, position, author);
+
+    axios
+      .put(`https://ph-job-tasks.vercel.app/tasks/${id}`, updateData)
+      .then((res) => console.log(res.data))
+      .catch((err) => console.log(err));
   };
   return (
     <div className="max-w-7xl mx-auto w-full h-screen">
@@ -66,10 +79,11 @@ const TaskUpdate = () => {
               <div className="w-full">
                 <h2>Position</h2>
                 <input
+                  disabled
                   defaultValue={position}
                   type="text"
-                  name="description"
-                  placeholder="Description"
+                  name="position"
+                  placeholder="Position"
                   className="input input-bordered w-full "
                 />
               </div>
@@ -99,8 +113,8 @@ const TaskUpdate = () => {
               </div>
             </div>
 
-            <button className="btn text-white btn-sm hover:bg-white glass w-full bg-[#de9c33c6] font-bold hover:text-[#090909]">
-              S u b m i t
+            <button className="btn uppercase text-white btn-sm hover:bg-white glass w-full bg-[#de9c33c6] font-bold hover:text-[#090909]">
+              U p d a t e
             </button>
           </div>
         </form>
