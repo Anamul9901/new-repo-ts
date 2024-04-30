@@ -1,6 +1,7 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
+import { TanstackQueryClient } from "@/component/TanstackQuery/TanstackQuery";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,8 +22,12 @@ export default function RootLayout({ children }) {
         <script src="https://cdn.tailwindcss.com"></script>
       </head>
       <body className={inter.className}>
-        {children}
-      <Toaster position="top-center" reverseOrder={false} />
+      <div>
+          <TanstackQueryClient>
+            {children}
+            <Toaster position="top-center" reverseOrder={false} />
+          </TanstackQueryClient>
+        </div>
       </body>
     </html>
   );
