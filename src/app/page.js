@@ -7,7 +7,7 @@ const page = () => {
     <div>
       <Navber />
       <Home />
-      {/* <Footer/> */}
+      <Footer/>
     </div>
   );
 };
