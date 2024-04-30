@@ -27,7 +27,7 @@ const Tasks = () => {
 
     // post new task on todo API
     const res = await axios
-      .post("http://localhost:5000/todo", updateData)
+      .post("http://localhost:5000/tasks", updateData)
       .then((res) => {
         toast.success("Task added");
         refetch();
@@ -42,7 +42,7 @@ const Tasks = () => {
     queryKey: ["todo"],
     queryFn: async () => {
       const res = await axios
-        .get("http://localhost:5000/todo")
+        .get("http://localhost:5000/tasks")
         .then((res) => {
           setAllTask(res?.data);
         })
@@ -73,7 +73,7 @@ const Tasks = () => {
     const position = "ongoing";
     const newData = { position };
     axios
-      .patch(`http://localhost:5000/todo/${id}`, newData)
+      .patch(`http://localhost:5000/tasks/${id}`, newData)
       .then((res) => {
         refetch();
         toast.success("To-Do to Ongoing");
@@ -85,7 +85,7 @@ const Tasks = () => {
     const position = "completed";
     const newData = { position };
     axios
-      .patch(`http://localhost:5000/todo/${id}`, newData)
+      .patch(`http://localhost:5000/tasks/${id}`, newData)
       .then((res) => {
         refetch();
         toast.success("Ongoing to Completed");
@@ -96,7 +96,7 @@ const Tasks = () => {
   // Delete function of todo data (position completed to delete)
   const handleDelete = (id) => {
     axios
-      .delete(`http://localhost:5000/todo/${id}`)
+      .delete(`http://localhost:5000/tasks/${id}`)
       .then((res) => {
         refetch();
         toast.success("Task Deleted");

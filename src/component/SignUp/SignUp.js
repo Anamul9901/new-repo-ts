@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import axios from "axios";
-// import { UploadImage } from "../PhotoFile/utilites";
+import { UploadImage } from "../PhotoFile/utilites";
 import toast from "react-hot-toast";
 
 const SignUp = () => {
@@ -33,7 +33,7 @@ const SignUp = () => {
       // user data post on server api when register
       if (res) {
         axios
-          .post("http://localhost:5000/user", user)
+          .post("https://job-task-xi.vercel.app/user", user)
           .then((res) => {
             router.push("/");
             toast.success("SignUp Successful");
