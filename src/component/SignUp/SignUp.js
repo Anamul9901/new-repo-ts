@@ -33,7 +33,7 @@ const SignUp = () => {
       // user data post on server api when register
       if (res) {
         axios
-          .post("https://job-task-xi.vercel.app/user", user)
+          .post("http://localhost:5000/user", user)
           .then((res) => {
             router.push("/");
             toast.success("SignUp Successful");

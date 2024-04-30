@@ -24,7 +24,7 @@ const Navber = () => {
 //     queryKey: ["user"],
 //     queryFn: async () => {
 //       const res = await axios
-//         .get("https://job-task-xi.vercel.app/user")
+//         .get("http://localhost:5000/user")
 //         .then((res) => {
 //           setAllUser(res?.data);
 //           refetch();
