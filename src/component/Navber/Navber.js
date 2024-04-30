@@ -1,11 +1,17 @@
 "use client";
 import Link from "next/link";
+import LogOut from "../LogOut/LogOut";
+import { auth } from "@/app/firebase/config";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import Image from "next/image";
-
+import { MdLogin } from "react-icons/md";
 
 const Navber = () => {
-//   const [allUser, setAllUser] = useState([]);
-//   const [user] = useAuthState(auth);
+  const [allUser, setAllUser] = useState([]);
+  const [user] = useAuthState(auth);
 
   // navber items
   const navitem = (
@@ -20,21 +26,21 @@ const Navber = () => {
   );
 
   // user data get from backend API
-//   const { data, refetch } = useQuery({
-//     queryKey: ["user"],
-//     queryFn: async () => {
-//       const res = await axios
-//         .get("http://localhost:5000/user")
-//         .then((res) => {
-//           setAllUser(res?.data);
-//           refetch();
-//         })
-//         .catch(() => {});
-//     },
-//   });
+  const { data, refetch } = useQuery({
+    queryKey: ["user"],
+    queryFn: async () => {
+      const res = await axios
+        .get("https://ph-job-tasks.vercel.app/users")
+        .then((res) => {
+          setAllUser(res?.data);
+          refetch();
+        })
+        .catch(() => {});
+    },
+  });
 
   // login user find
-//   const findUser = allUser?.find((users) => users?.email == user?.email);
+  const findUser = allUser?.find((users) => users?.email == user?.email);
 
   return (
     <div className="bg-[#0b4a6cde] text-white">
@@ -86,7 +92,7 @@ const Navber = () => {
                     <div className="w-10 rounded-full">
                       <Image
                         src={
-                        //   findUser?.photo ||
+                          findUser?.photo ||
                           "https://i.ibb.co/bd741Kc/pngwing-com-46.png"
                         }
                         alt="alt"
@@ -98,13 +104,13 @@ const Navber = () => {
                 </div>
                 <div className="pr-1">
                   <span className="text-xs md:text-lg font-bold">
-                    {/* {findUser?.name} */}
+                    {findUser?.name}
                   </span>
                 </div>
               </div>
             </div>
             {/* login and logout logic button */}
-            {/* <div className="pl-4">
+            <div className="pl-4">
               {user ? (
                 <div>
                   <LogOut />
@@ -116,7 +122,7 @@ const Navber = () => {
                   </button>
                 </Link>
               )}
-            </div> */}
+            </div>
           </div>
         </div>
       </div>

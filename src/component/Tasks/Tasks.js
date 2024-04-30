@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 const Tasks = () => {
   const [allTask, setAllTask] = useState([]);
   const [user, loading] = useAuthState(auth);
+  const [storeId, setStoreId] = useState("");
   const router = useRouter();
 
   //  function of add-task button (add task of todo api)
@@ -27,7 +28,7 @@ const Tasks = () => {
 
     // post new task on todo API
     const res = await axios
-      .post("http://localhost:5000/tasks", updateData)
+      .post("https://ph-job-tasks.vercel.app/tasks", updateData)
       .then((res) => {
         toast.success("Task added");
         refetch();
@@ -42,7 +43,7 @@ const Tasks = () => {
     queryKey: ["todo"],
     queryFn: async () => {
       const res = await axios
-        .get("http://localhost:5000/tasks")
+        .get("https://ph-job-tasks.vercel.app/tasks")
         .then((res) => {
           setAllTask(res?.data);
         })
@@ -59,7 +60,7 @@ const Tasks = () => {
     );
   }
   if (!user) {
-    toast.success("Login Required");
+    toast.error("Login Required");
     router.push("/login");
     return null;
   }
@@ -73,7 +74,18 @@ const Tasks = () => {
     const position = "ongoing";
     const newData = { position };
     axios
-      .patch(`http://localhost:5000/tasks/${id}`, newData)
+      .patch(`https://ph-job-tasks.vercel.app/tasks/${storeId}`, newData)
+      .then((res) => {
+        refetch();
+        toast.success("To-Do to Ongoing");
+      })
+      .catch((err) => {});
+  };
+  const handleToDo = (id) => {
+    const position = "to-do";
+    const newData = { position };
+    axios
+      .patch(`https://ph-job-tasks.vercel.app/tasks/${storeId}`, newData)
       .then((res) => {
         refetch();
         toast.success("To-Do to Ongoing");
@@ -85,7 +97,7 @@ const Tasks = () => {
     const position = "completed";
     const newData = { position };
     axios
-      .patch(`http://localhost:5000/tasks/${id}`, newData)
+      .patch(`https://ph-job-tasks.vercel.app/tasks/${storeId}`, newData)
       .then((res) => {
         refetch();
         toast.success("Ongoing to Completed");
@@ -96,12 +108,36 @@ const Tasks = () => {
   // Delete function of todo data (position completed to delete)
   const handleDelete = (id) => {
     axios
-      .delete(`http://localhost:5000/tasks/${id}`)
+      .delete(`https://ph-job-tasks.vercel.app/tasks/${id}`)
       .then((res) => {
         refetch();
         toast.success("Task Deleted");
       })
       .catch(() => {});
+  };
+  const dragStarted = (e, id) => {
+    // console.log("drag started", id);
+    // e.dataTransfer.setData("todoId", id);
+    setStoreId(id);
+  };
+  console.log("store Id-", storeId);
+
+  const draggingOver = (e) => {
+    e.preventDefault();
+    console.log("Dragging Over Now");
+  };
+
+  const dragDropped = (e) => {
+    console.log("drooped");
+    // const position = "ongoing";
+    // const newData = { position };
+    // axios
+    //   .patch(`https://ph-job-tasks.vercel.app/tasks/${storeId}`, newData)
+    //   .then((res) => {
+    //     refetch();
+    //     toast.success("To-Do to Ongoing");
+    //   })
+    //   .catch((err) => {});
   };
 
   return (
@@ -185,7 +221,12 @@ const Tasks = () => {
 
       <div className="md:flex justify-between pt-4 text-black px-2 rounded-lg gap-2">
         {/* All To-Do task */}
-        <div className="bg-red-300 flex-1 rounded-lg glass">
+        <div
+          droppable
+          onDragOver={(e) => draggingOver(e)}
+          onDrop={(e) => handleToDo(e)}
+          className="bg-red-300 flex-1 rounded-lg glass"
+        >
           <h2 className="text-center text-xl font-bold py-2">To-Do</h2>
           <hr />
           <div>
@@ -206,7 +247,11 @@ const Tasks = () => {
                   {filterTasks
                     ?.filter((task) => task?.position === "to-do")
                     .map((task, ind) => (
-                      <tr key={task?._id}>
+                      <tr
+                        draggable
+                        onDragStart={(e) => dragStarted(e, task?._id)}
+                        key={task?._id}
+                      >
                         <th>{ind + 1}</th>
                         <td>{task?.name}</td>
                         <td>{task?.dadline}</td>
@@ -232,7 +277,12 @@ const Tasks = () => {
         </div>
 
         {/* All Ongoing task */}
-        <div className="bg-yellow-300 flex-1 mt-6 md:mt-0 rounded-lg glass">
+        <div
+          droppable
+          onDragOver={(e) => draggingOver(e)}
+          onDrop={(e) => handleOngoing(e)}
+          className="bg-yellow-300 flex-1 mt-6 md:mt-0 rounded-lg glass"
+        >
           <h2 className="text-center text-xl font-bold py-2">Ongoing</h2>
           <hr />
           <div>
@@ -253,7 +303,11 @@ const Tasks = () => {
                   {filterTasks
                     ?.filter((task) => task?.position === "ongoing")
                     .map((task, ind) => (
-                      <tr key={task?._id}>
+                      <tr
+                        draggable
+                        onDragStart={(e) => dragStarted(e, task?._id)}
+                        key={task?._id}
+                      >
                         <th>{ind + 1}</th>
                         <td>{task.name}</td>
                         <td>{task.dadline}</td>
@@ -264,7 +318,7 @@ const Tasks = () => {
                               <div>
                                 <button
                                   className="bg-green-600   rounded-md font-semibold text-white px-1"
-                                  onClick={() => handleCompleted(task._id)}
+                                  // onClick={() => handleCompleted(task._id)}
                                 >
                                   Completed
                                 </button>
@@ -281,7 +335,12 @@ const Tasks = () => {
         </div>
 
         {/* All completed task */}
-        <div className="bg-green-300 flex-1 mt-6 md:mt-0 rounded-lg glass">
+        <div
+          droppable
+          onDragOver={(e) => draggingOver(e)}
+          onDrop={(e) => handleCompleted(e)}
+          className="bg-green-300 flex-1 mt-6 md:mt-0 rounded-lg glass"
+        >
           <h2 className="text-center text-xl font-bold py-2">Completed</h2>
           <hr />
           <div>
@@ -293,7 +352,7 @@ const Tasks = () => {
                     <th>No.</th>
                     <th>Name</th>
                     <th>Dadline</th>
-                    <th>Favorite Color</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -301,7 +360,14 @@ const Tasks = () => {
                   {filterTasks
                     ?.filter((task) => task?.position === "completed")
                     .map((task, ind) => (
-                      <tr key={task?._id}>
+                      // droppable
+                      //   onDragOver={(e) => draggingOver(e)}
+                      //   onDrop={(e) => handleOngoing(e)}
+                      <tr
+                        draggable
+                        onDragStart={(e) => dragStarted(e, task?._id)}
+                        key={task?._id}
+                      >
                         <th>{ind + 1}</th>
                         <td>{task.name}</td>
                         <td>{task.dadline}</td>
