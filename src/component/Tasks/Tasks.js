@@ -6,6 +6,8 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { IoTrashBinSharp } from "react-icons/io5";
+import { MdUpdate } from "react-icons/md";
 
 const Tasks = () => {
   const [allTask, setAllTask] = useState([]);
@@ -69,18 +71,7 @@ const Tasks = () => {
   const filterTasks = allTask?.filter((task) => task?.author == user?.email);
 
   // Update position of Todo API tasks
-  // (position >> to-do to ongoing)
-  const handleOngoing = (id) => {
-    const position = "ongoing";
-    const newData = { position };
-    axios
-      .patch(`https://ph-job-tasks.vercel.app/tasks/${storeId}`, newData)
-      .then((res) => {
-        refetch();
-        toast.success("To-Do to Ongoing");
-      })
-      .catch((err) => {});
-  };
+  // (shift To-do)
   const handleToDo = (id) => {
     const position = "to-do";
     const newData = { position };
@@ -88,11 +79,25 @@ const Tasks = () => {
       .patch(`https://ph-job-tasks.vercel.app/tasks/${storeId}`, newData)
       .then((res) => {
         refetch();
-        toast.success("To-Do to Ongoing");
+        toast.success("Shift Ongoing");
       })
       .catch((err) => {});
   };
-  //  (position >> ongoing to completed)
+
+  // (Shift ongoing)
+  const handleOngoing = (id) => {
+    const position = "ongoing";
+    const newData = { position };
+    axios
+      .patch(`https://ph-job-tasks.vercel.app/tasks/${storeId}`, newData)
+      .then((res) => {
+        refetch();
+        toast.success("Shift Ongoing");
+      })
+      .catch((err) => {});
+  };
+
+  //  (Shift completed)
   const handleCompleted = (id) => {
     const position = "completed";
     const newData = { position };
@@ -100,7 +105,7 @@ const Tasks = () => {
       .patch(`https://ph-job-tasks.vercel.app/tasks/${storeId}`, newData)
       .then((res) => {
         refetch();
-        toast.success("Ongoing to Completed");
+        toast.success("Shift Completed");
       })
       .catch((err) => {});
   };
@@ -115,6 +120,11 @@ const Tasks = () => {
       })
       .catch(() => {});
   };
+
+  const handleUpdate = (id) => {
+    console.log(id);
+    router.push(`tasks/${id}`)
+  };
   const dragStarted = (e, id) => {
     // console.log("drag started", id);
     // e.dataTransfer.setData("todoId", id);
@@ -125,19 +135,6 @@ const Tasks = () => {
   const draggingOver = (e) => {
     e.preventDefault();
     console.log("Dragging Over Now");
-  };
-
-  const dragDropped = (e) => {
-    console.log("drooped");
-    // const position = "ongoing";
-    // const newData = { position };
-    // axios
-    //   .patch(`https://ph-job-tasks.vercel.app/tasks/${storeId}`, newData)
-    //   .then((res) => {
-    //     refetch();
-    //     toast.success("To-Do to Ongoing");
-    //   })
-    //   .catch((err) => {});
   };
 
   return (
@@ -258,13 +255,21 @@ const Tasks = () => {
                         <td>
                           <div className="flex">
                             {/* Action button (Ongoing) */}
-                            <div className="pb-2">
-                              <button
-                                onClick={() => handleOngoing(task._id)}
-                                className="bg-yellow-600 rounded-md font-semibold text-white px-1"
-                              >
-                                Ongoing
-                              </button>
+                            <div className="flex">
+                              <div className="pb-2 flex gap-1">
+                                <button
+                                  className="rounded-md font-semibold text-xl text-red-500"
+                                  onClick={() => handleDelete(task._id)}
+                                >
+                                  <IoTrashBinSharp />
+                                </button>
+                                <button
+                                  className="rounded-md font-semibold text-xl text-green-500"
+                                  onClick={() => handleUpdate(task._id)}
+                                >
+                                  <MdUpdate />
+                                </button>
+                              </div>
                             </div>
                           </div>
                         </td>
@@ -314,15 +319,19 @@ const Tasks = () => {
                         <td>
                           {/* Acion button (Completed) */}
                           <div className="flex">
-                            <div>
-                              <div>
-                                <button
-                                  className="bg-green-600   rounded-md font-semibold text-white px-1"
-                                  // onClick={() => handleCompleted(task._id)}
-                                >
-                                  Completed
-                                </button>
-                              </div>
+                            <div className="pb-2 flex gap-1">
+                              <button
+                                className="rounded-md font-semibold text-xl text-red-500"
+                                onClick={() => handleDelete(task._id)}
+                              >
+                                <IoTrashBinSharp />
+                              </button>
+                              <button
+                                className="rounded-md font-semibold text-xl text-green-500"
+                                onClick={() => handleUpdate(task._id)}
+                              >
+                                <MdUpdate />
+                              </button>
                             </div>
                           </div>
                         </td>
@@ -374,12 +383,18 @@ const Tasks = () => {
                         <td>
                           {/* Action button (delete) */}
                           <div className="flex">
-                            <div className="pb-2">
+                            <div className="pb-2 flex gap-1">
                               <button
-                                className="bg-red-600 rounded-md font-semibold text-white px-1"
+                                className="rounded-md font-semibold text-xl text-red-500"
                                 onClick={() => handleDelete(task._id)}
                               >
-                                Delete
+                                <IoTrashBinSharp />
+                              </button>
+                              <button
+                                className="rounded-md font-semibold text-xl text-green-500"
+                                onClick={() => handleUpdate(task._id)}
+                              >
+                                <MdUpdate />
                               </button>
                             </div>
                           </div>
