@@ -37,7 +37,7 @@ const Navber = () => {
 //   const findUser = allUser?.find((users) => users?.email == user?.email);
 
   return (
-    <div className="bg-[#0e7cb7de] text-white">
+    <div className="bg-[#0b4a6cde] text-white">
       <div className="max-w-7xl mx-auto w-full">
         <div className="navbar   ">
           <div className="navbar-start ">

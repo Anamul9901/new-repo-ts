@@ -13,10 +13,11 @@ export default function RootLayout({ children }) {
     <html data-theme="luxury" lang="en">
       <head>
         <link
-          href="https://cdn.jsdelivr.net/npm/daisyui@4.7.3/dist/full.min.css"
+          href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css"
           rel="stylesheet"
           type="text/css"
         />
+        <script src="https://cdn.tailwindcss.com"></script>
       </head>
       <body className={inter.className}>{children}</body>
     </html>
