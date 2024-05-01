@@ -21,10 +21,12 @@ const SignUp = () => {
     const name = e.name;
     const email = e.email;
     const password = e.password;
-    console.log(e?.photo.file);
+    console.log(e.photo.file.originFileObj
+    );
 
-    const image = e?.photo?.file;
-    const imageData = await UploadImage(image);
+    const image = e.photo.file.originFileObj
+    ;
+    const imageData =await UploadImage(image);
     const photo = imageData?.data?.display_url;
     const user = { name, email, photo};
 
@@ -36,7 +38,7 @@ const SignUp = () => {
       // user data post on server api when register
       if (res) {
         axios
-          .post("https://ph-job-tasks.vercel.app/users", user)
+          .post("https://663242b4c51e14d69563e282.mockapi.io/todo/users", user)
           .then((res) => {
             router.push("/");
             toast.success("SignUp Successful");
@@ -67,7 +69,6 @@ const SignUp = () => {
                 rules={[
                   {
                     required: true,
-                    type: "text",
                     message: "Please enter name",
                   },
                 ]}
@@ -94,7 +95,7 @@ const SignUp = () => {
                 rules={[
                   {
                     required: true,
-                    message: "Please enter you password",
+                    message: "Please enter password",
                   },
                 ]}
                 label="Password"
@@ -102,7 +103,12 @@ const SignUp = () => {
               >
                 <Input.Password placeholder="Entter your password" />
               </Form.Item>
-              <Form.Item label="Profile Picture" name={"photo"}>
+              <Form.Item rules={[
+                {
+                  required: true,
+                  message: "Please upload photo"
+                }
+              ]} label="Profile Picture" name={"photo"}>
                 <Upload>
                   <Button className="bg-white">Upload Profile Picture</Button>
                 </Upload>

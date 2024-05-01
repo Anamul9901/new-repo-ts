@@ -4,7 +4,7 @@ export const UploadImage = async (image) => {
   try {
     const formData = new FormData();
     formData.append("image", image);
-  const { data } =await axios.post(`https://api.imgbb.com/1/upload?key=df9054f407ac3bbd57396b9a0b13918e`, formData);
+  const { data } =await axios.post(`https://api.imgbb.com/1/upload?key=0f50019d5c35e44863abd7cb471adfbf`, formData);
 
 
     return data;

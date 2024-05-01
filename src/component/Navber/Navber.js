@@ -30,7 +30,7 @@ const Navber = () => {
     queryKey: ["user"],
     queryFn: async () => {
       const res = await axios
-        .get("https://ph-job-tasks.vercel.app/users")
+        .get("https://663242b4c51e14d69563e282.mockapi.io/todo/users")
         .then((res) => {
           setAllUser(res?.data);
           refetch();
