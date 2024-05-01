@@ -14,7 +14,7 @@ const ProjectUpdate = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/projects")
+      .get("https://ph-job-tasks.vercel.app/projects")
       .then((res) => setAllTasks(res.data))
       .catch((err) => console.log(err));
   }, []);
@@ -39,10 +39,10 @@ const ProjectUpdate = () => {
     console.log("update-", name, dadline, description, author);
 
     axios
-      .put(`http://localhost:5000/projects/${id}`, updateData)
+    .put(`https://ph-job-tasks.vercel.app/projects/${id}`, updateData)
       .then((res) => {
         toast.success("Task Updated");
-        router.push("/tasks");
+        // router.push("/tasks");
       })
       .catch((err) => console.log(err));
   };

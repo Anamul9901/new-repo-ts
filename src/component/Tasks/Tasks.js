@@ -14,6 +14,8 @@ const Tasks = () => {
   const [user, loading] = useAuthState(auth);
   const [storeId, setStoreId] = useState("");
   const router = useRouter();
+  var id = localStorage.getItem("id");
+  console.log(id);
 
   //  function of add-task button (add task of todo api)
   const handleAddTask = async (e) => {
@@ -25,8 +27,17 @@ const Tasks = () => {
     const description = form.description.value;
     const position = "to-do";
     const author = user?.email;
+    const projectId = localStorage.getItem("id");
     form.reset();
-    const updateData = { name, title, dadline, description, position, author };
+    const updateData = {
+      name,
+      title,
+      dadline,
+      description,
+      position,
+      author,
+      projectId,
+    };
 
     // post new task on todo API
     const res = await axios
@@ -66,10 +77,12 @@ const Tasks = () => {
     router.push("/login");
     return null;
   }
-
+console.log(allTask);
   //  filter all task from todo API by login user (only user task shown)
-  const filterTasks = allTask?.filter((task) => task?.author == user?.email);
-
+  const filterTasks = allTask?.filter(
+    (task) => (task?.author == user?.email) && (task?.projectId == id)
+  );
+console.log(filterTasks);
   // Update position of Todo API tasks
   // (shift To-do)
   const handleToDo = (id) => {
@@ -123,7 +136,7 @@ const Tasks = () => {
 
   const handleUpdate = (id) => {
     console.log(id);
-    router.push(`tasks/${id}`)
+    router.push(`tasks/${id}`);
   };
   const dragStarted = (e, id) => {
     // console.log("drag started", id);

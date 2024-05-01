@@ -20,7 +20,7 @@ const Navber = () => {
         <Link href={"/"}>Home</Link>
       </li>
       <li>
-        <Link href={"/tasks"}>Tasks</Link>
+        <Link href={"/projects"}>Projects</Link>
       </li>
     </>
   );

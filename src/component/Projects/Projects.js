@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { IoTrashBinSharp } from "react-icons/io5";
 import { MdUpdate } from "react-icons/md";
+import { FaEye } from "react-icons/fa";
 
 const Projects = () => {
   const [allProject, setAllProject] = useState([]);
@@ -29,7 +30,7 @@ const Projects = () => {
 
     // post new task on todo API
     const res = await axios
-      .post("http://localhost:5000/projects", updateData)
+      .post("https://ph-job-tasks.vercel.app/projects", updateData)
       .then((res) => {
         toast.success("Task added");
         refetch();
@@ -44,7 +45,7 @@ const Projects = () => {
     queryKey: ["project"],
     queryFn: async () => {
       const res = await axios
-        .get("http://localhost:5000/projects")
+        .get("https://ph-job-tasks.vercel.app/projects")
         .then((res) => {
           setAllProject(res?.data);
         })
@@ -76,7 +77,7 @@ const Projects = () => {
   // Delete function of todo data (position completed to delete)
   const handleDelete = (id) => {
     axios
-      .delete(`http://localhost:5000/projects/${id}`)
+      .delete(`https://ph-job-tasks.vercel.app/projects/${id}`)
       .then((res) => {
         refetch();
         toast.success("Project Deleted");
@@ -88,6 +89,12 @@ const Projects = () => {
     console.log(id);
     router.push(`projects/${id}`);
   };
+
+  const handleShow = (id) =>{
+    console.log(id);
+    localStorage.setItem('id', id)
+    router.push('tasks')
+  }
 
   return (
     <div className="max-w-7xl mx-auto h-screen">
@@ -198,6 +205,13 @@ const Projects = () => {
                               onClick={() => handleUpdate(project._id)}
                             >
                               <MdUpdate />
+                            </button>
+
+                            <button
+                              className="rounded-md font-semibold text-xl text-green-500"
+                              onClick={() => handleShow(project._id)}
+                            >
+                              <FaEye />
                             </button>
                           </div>
                         </div>
