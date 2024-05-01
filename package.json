@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.32.0",
+    "antd": "^5.16.5",
     "axios": "^1.6.8",
     "firebase": "^10.11.1",
     "next": "14.2.3",

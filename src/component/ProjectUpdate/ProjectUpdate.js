@@ -7,14 +7,14 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-const TaskUpdate = () => {
+const ProjectUpdate = () => {
   const [allTasks, setAllTasks] = useState([]);
   const { id } = useParams();
   const router = useRouter();
 
   useEffect(() => {
     axios
-      .get("https://ph-job-tasks.vercel.app/tasks")
+      .get("http://localhost:5000/projects")
       .then((res) => setAllTasks(res.data))
       .catch((err) => console.log(err));
   }, []);
@@ -23,27 +23,23 @@ const TaskUpdate = () => {
   //   console.log(task2);
 
   const name = task2?.name;
-  const title = task2?.title;
   const dadline = task2?.dadline;
   const description = task2?.description;
-  const position = task2?.position;
   const author = task2?.author;
-  console.log(name, title, dadline, description, position, author);
+  console.log(name, dadline, description, author);
 
   const handleUpdateTask = (e) => {
     e.preventDefault();
     const form = e.target;
     const name = form.name.value;
-    const title = form.title.value;
     const dadline = form.dadline.value;
     const description = form.description.value;
-    const position = task2?.position;
     const author = task2?.author;
-    const updateData = { name, title, dadline, description, position, author };
-    console.log("update-", name, title, dadline, description, position, author);
+    const updateData = { name, dadline, description, author };
+    console.log("update-", name, dadline, description, author);
 
     axios
-      .put(`https://ph-job-tasks.vercel.app/tasks/${id}`, updateData)
+      .put(`http://localhost:5000/projects/${id}`, updateData)
       .then((res) => {
         toast.success("Task Updated");
         router.push("/tasks");
@@ -65,31 +61,6 @@ const TaskUpdate = () => {
                   placeholder="Name"
                   required
                   className="input input-bordered w-full"
-                />
-              </div>
-              <div className="w-full">
-                <h2>Title</h2>
-                <input
-                  defaultValue={title}
-                  type="img"
-                  name="title"
-                  placeholder="Tite"
-                  required
-                  className="input input-bordered  w-full"
-                />
-              </div>
-            </div>
-
-            <div className="md:flex gap-5  mb-5">
-              <div className="w-full">
-                <h2>Position</h2>
-                <input
-                  disabled
-                  defaultValue={position}
-                  type="text"
-                  name="position"
-                  placeholder="Position"
-                  className="input input-bordered w-full "
                 />
               </div>
               <div className="w-full">
@@ -128,4 +99,4 @@ const TaskUpdate = () => {
   );
 };
 
-export default TaskUpdate;
+export default ProjectUpdate;
