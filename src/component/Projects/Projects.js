@@ -15,7 +15,7 @@ const Projects = () => {
   const [user, loading] = useAuthState(auth);
   const [storeId, setStoreId] = useState("");
   const router = useRouter();
-  console.log(user?.email);
+  // console.log(user?.email);
 
   //  function of add-task button (add task of todo api)
   const handleAddProject = async (e) => {
@@ -52,7 +52,7 @@ const Projects = () => {
         .catch(() => {});
     },
   });
-  console.log(allProject);
+  // console.log(allProject);
 
   // (redirect to login)  When user trying to go tasks page without login then he redirect to login page
   if (loading) {
@@ -72,7 +72,7 @@ const Projects = () => {
   const filterProjects = allProject?.filter(
     (project) => project?.author == user?.email
   );
-  console.log(filterProjects);
+  // console.log(filterProjects);
 
   // Delete function of todo data (position completed to delete)
   const handleDelete = (id) => {
@@ -86,12 +86,12 @@ const Projects = () => {
   };
 
   const handleUpdate = (id) => {
-    console.log(id);
+    // console.log(id);
     router.push(`projects/${id}`);
   };
 
   const handleShow = (id) =>{
-    console.log(id);
+    // console.log(id);
     localStorage.setItem('id', id)
     router.push('tasks')
   }
@@ -100,7 +100,8 @@ const Projects = () => {
     <div className="max-w-7xl mx-auto h-screen">
       {/* Using Modal for add task on todo API */}
       <div>
-        <div className="flex items-center justify-center pt-12">
+        <h2 className="text-2xl font-semibold text-center pt-4">Your Projects</h2>
+        <div className="flex items-center justify-end pt-3 pr-2">
           <button
             className="btn btn-sm glass bg-white hover:text-[#ffffff] text-black font-bold"
             onClick={() => document.getElementById("my_modal_1").showModal()}
@@ -165,17 +166,16 @@ const Projects = () => {
       </div>
       {/* Finished Modal */}
 
-      <div className="md:flex justify-between pt-4 text-black px-2 rounded-lg gap-2">
-        {/* All Ongoing task */}
-        <div className="bg-yellow-300 flex-1 mt-6 md:mt-0 rounded-lg glass">
-          <h2 className="text-center text-xl font-bold py-2">Ongoing</h2>
+      <div className="md:flex justify-between pt-1 text-white px-2 rounded-lg gap-2 w-full">
+        <div className=" glass flex-1 mt-6 md:mt-0 rounded-lg glass">
+          <h2 className="text-center font-bold py-2">All project</h2>
           <hr />
           <div>
             <div className="overflow-x-auto">
               <table className="table">
                 {/* head */}
                 <thead>
-                  <tr className="text-black">
+                  <tr className="text-white">
                     <th>No.</th>
                     <th>Name</th>
                     <th>Dadline</th>
@@ -193,7 +193,7 @@ const Projects = () => {
                       <td>
                         {/* Acion button (Completed) */}
                         <div className="flex">
-                          <div className="pb-2 flex gap-1">
+                          <div className="pb-2 flex gap-2">
                             <button
                               className="rounded-md font-semibold text-xl text-red-500"
                               onClick={() => handleDelete(project._id)}
@@ -208,7 +208,7 @@ const Projects = () => {
                             </button>
 
                             <button
-                              className="rounded-md font-semibold text-xl text-green-500"
+                              className="rounded-md font-semibold text-xl text-blue-500"
                               onClick={() => handleShow(project._id)}
                             >
                               <FaEye />

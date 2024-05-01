@@ -16,7 +16,7 @@ const ProjectUpdate = () => {
     axios
       .get("https://66312420c92f351c03dc4ed6.mockapi.io/todo/projects")
       .then((res) => setAllTasks(res.data))
-      .catch((err) => console.log(err));
+      .catch((err) =>{});
   }, []);
   const task = allTasks.filter((task) => task._id == id);
   const task2 = task[0];
@@ -26,7 +26,7 @@ const ProjectUpdate = () => {
   const dadline = task2?.dadline;
   const description = task2?.description;
   const author = task2?.author;
-  console.log(name, dadline, description, author);
+  // console.log(name, dadline, description, author);
 
   const handleUpdateTask = (e) => {
     e.preventDefault();
@@ -36,7 +36,7 @@ const ProjectUpdate = () => {
     const description = form.description.value;
     const author = task2?.author;
     const updateData = { name, dadline, description, author };
-    console.log("update-", name, dadline, description, author);
+    // console.log("update-", name, dadline, description, author);
 
     axios
     .put(`https://66312420c92f351c03dc4ed6.mockapi.io/todo/projects/${id}`, updateData)
@@ -48,7 +48,8 @@ const ProjectUpdate = () => {
   };
   return (
     <div className="max-w-7xl mx-auto w-full h-screen">
-      <div className="flex justify-center pt-12">
+       <h2 className="text-2xl font-semibold text-center pt-12">Update Project</h2>
+      <div className="flex justify-center pt-2">
         <form onSubmit={handleUpdateTask}>
           <div className="pt-6">
             <div className="md:flex gap-5 mb-5">

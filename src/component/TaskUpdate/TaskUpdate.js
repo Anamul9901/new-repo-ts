@@ -28,7 +28,7 @@ const TaskUpdate = () => {
   const description = task2?.description;
   const position = task2?.position;
   const author = task2?.author;
-  console.log(name, title, dadline, description, position, author);
+  // console.log(name, title, dadline, description, position, author);
 
   const handleUpdateTask = (e) => {
     e.preventDefault();
@@ -40,7 +40,7 @@ const TaskUpdate = () => {
     const position = task2?.position;
     const author = task2?.author;
     const updateData = { name, title, dadline, description, position, author };
-    console.log("update-", name, title, dadline, description, position, author);
+    // console.log("update-", name, title, dadline, description, position, author);
 
     axios
       .put(`https://66312420c92f351c03dc4ed6.mockapi.io/todo/tasks/${id}`, updateData)
@@ -48,11 +48,12 @@ const TaskUpdate = () => {
         toast.success("Task Updated");
         router.push("/tasks");
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {});
   };
   return (
     <div className="max-w-7xl mx-auto w-full h-screen">
-      <div className="flex justify-center pt-12">
+      <h2 className="text-2xl font-semibold text-center pt-12">Update Task</h2>
+      <div className="flex justify-center pt-2">
         <form onSubmit={handleUpdateTask}>
           <div className="pt-6">
             <div className="md:flex gap-5 mb-5">

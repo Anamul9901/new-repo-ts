@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import { IoTrashBinSharp } from "react-icons/io5";
 import { MdUpdate } from "react-icons/md";
 import { MdSearch } from "react-icons/md";
+import { MdManageAccounts } from "react-icons/md";
 
 const Tasks = () => {
   const [allTask, setAllTask] = useState([]);
@@ -16,8 +17,9 @@ const Tasks = () => {
   const [user, loading] = useAuthState(auth);
   const [storeId, setStoreId] = useState("");
   const [search, setSearch] = useState("");
+  const [taskId, setTaskId] = useState("");
   const router = useRouter();
-  const id = localStorage.getItem("id");
+  const id = typeof window !== 'undefined' ? localStorage.getItem("id") : null;
   // console.log(id);
 
   //  function of add-task button (add task of todo api)
@@ -44,7 +46,10 @@ const Tasks = () => {
 
     // post new task on todo API
     const res = await axios
-      .post("https://66312420c92f351c03dc4ed6.mockapi.io/todo/tasks", updateData)
+      .post(
+        "https://66312420c92f351c03dc4ed6.mockapi.io/todo/tasks",
+        updateData
+      )
       .then((res) => {
         toast.success("Task added");
         refetch();
@@ -59,7 +64,9 @@ const Tasks = () => {
     queryKey: ["tasks"],
     queryFn: async () => {
       const res = await axios
-        .get(`https://66312420c92f351c03dc4ed6.mockapi.io/todo/tasks?name=${search}`)
+        .get(
+          `https://66312420c92f351c03dc4ed6.mockapi.io/todo/tasks?name=${search}`
+        )
         .then((res) => {
           setAllTask(res?.data);
         })
@@ -106,7 +113,10 @@ const Tasks = () => {
     const position = "to-do";
     const newData = { position };
     axios
-      .put(`https://66312420c92f351c03dc4ed6.mockapi.io/todo/tasks/${storeId}`, newData)
+      .put(
+        `https://66312420c92f351c03dc4ed6.mockapi.io/todo/tasks/${storeId}`,
+        newData
+      )
       .then((res) => {
         refetch();
         toast.success("Shift Ongoing");
@@ -119,7 +129,10 @@ const Tasks = () => {
     const position = "ongoing";
     const newData = { position };
     axios
-      .put(`https://66312420c92f351c03dc4ed6.mockapi.io/todo/tasks/${storeId}`, newData)
+      .put(
+        `https://66312420c92f351c03dc4ed6.mockapi.io/todo/tasks/${storeId}`,
+        newData
+      )
       .then((res) => {
         refetch();
         toast.success("Shift Ongoing");
@@ -132,7 +145,10 @@ const Tasks = () => {
     const position = "completed";
     const newData = { position };
     axios
-      .put(`https://66312420c92f351c03dc4ed6.mockapi.io/todo/tasks/${storeId}`, newData)
+      .put(
+        `https://66312420c92f351c03dc4ed6.mockapi.io/todo/tasks/${storeId}`,
+        newData
+      )
       .then((res) => {
         refetch();
         toast.success("Shift Completed");
@@ -158,11 +174,11 @@ const Tasks = () => {
   const dragStarted = (e, id) => {
     setStoreId(id);
   };
-  console.log("store Id-", storeId);
+  // console.log("store Id-", storeId);
 
   const draggingOver = (e) => {
     e.preventDefault();
-    console.log("Dragging Over Now");
+    // console.log("Dragging Over Now");
   };
 
   const handleSearch = (e) => {
@@ -172,7 +188,31 @@ const Tasks = () => {
     refetch();
     setSearch(searchText);
   };
-  console.log(search);
+  // console.log(search);
+
+  const handlePassTaskId = (id) => {
+    setTaskId(id);
+  };
+  const handleAddTeamMember = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const memberName = form.name.value;
+    const memberEmail = form.email.value;
+    const id = taskId;
+    const updateMemberData = { memberName, memberEmail };
+    // console.log(id);
+    // console.log(updateMemberData);
+    axios
+      .put(
+        `https://66312420c92f351c03dc4ed6.mockapi.io/todo/tasks/${id}`,
+        updateMemberData
+      )
+      .then((res) => {
+        toast.success("Task Updated");
+        refetch();
+      })
+      .catch((err) => console.log(err));
+  };
 
   return (
     <div className="max-w-7xl mx-auto h-screen">
@@ -193,15 +233,6 @@ const Tasks = () => {
               Add Task
             </button>
             {/* add task end */}
-          </div>
-          <div className="w-xl">
-            <input
-              type="date"
-              name="dadline"
-              required
-              placeholder="Author Name"
-              className="input input-bordered w-full"
-            />
           </div>
           {/* search option start */}
           <div className="text-center text-white flex justify-center items-center">
@@ -231,6 +262,7 @@ const Tasks = () => {
           {/* search option end */}
         </div>
 
+        {/* modal start for add tasks*/}
         <dialog id="my_modal_1" className="modal">
           <div className="modal-box">
             <form method="dialog">
@@ -295,8 +327,53 @@ const Tasks = () => {
             </form>
           </div>
         </dialog>
+        {/* task modal end */}
+
+        {/* add team member modal start */}
+        <dialog id="my_modal_2" className="modal">
+          <div className="modal-box">
+            <form method="dialog">
+              {/* if there is a button in form, it will close the modal */}
+              <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 glass">
+                ✕
+              </button>
+            </form>
+            <h3 className="font-bold text-lg text-center">Update mamber for this task!</h3>
+
+            <form method="dialog" onSubmit={handleAddTeamMember}>
+              <div className="pt-6">
+                <div className="md:flex gap-5 mb-5">
+                  <div className="w-full">
+                    <h2>Name</h2>
+                    <input
+                      type="text"
+                      name="name"
+                      placeholder="Enter name"
+                      required
+                      className="input input-bordered w-full"
+                    />
+                  </div>
+                  <div className="w-full">
+                    <h2>Email</h2>
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="Enter email"
+                      required
+                      className="input input-bordered  w-full"
+                    />
+                  </div>
+                </div>
+
+                <button className="btn text-white btn-sm hover:bg-white glass w-full bg-[#de9c33c6] font-bold hover:text-[#090909]">
+                  S u b m i t
+                </button>
+              </div>
+            </form>
+          </div>
+        </dialog>
       </div>
-      {/* Finished Modal */}
+      {/* end team member Modal */}
 
       <div className="md:flex justify-between pt-1 text-black px-2 rounded-lg gap-2">
         {/* All To-Do task */}
@@ -318,6 +395,7 @@ const Tasks = () => {
                     <th>Name</th>
                     <th>Dadline</th>
                     <th>Action</th>
+                    <th>Mamber</th>
                   </tr>
                 </thead>
                 {/* body */}
@@ -338,7 +416,7 @@ const Tasks = () => {
                           <div className="flex">
                             {/* Action button (Ongoing) */}
                             <div className="flex">
-                              <div className="pb-2 flex gap-1">
+                              <div className=" flex gap-1">
                                 <button
                                   className="rounded-md font-semibold text-xl text-red-500"
                                   onClick={() => handleDelete(task._id)}
@@ -351,10 +429,23 @@ const Tasks = () => {
                                 >
                                   <MdUpdate />
                                 </button>
+                                <div onClick={() => handlePassTaskId(task._id)}>
+                                  <button
+                                    className="text-xl"
+                                    onClick={() =>
+                                      document
+                                        .getElementById("my_modal_2")
+                                        .showModal()
+                                    }
+                                  >
+                                    <MdManageAccounts />
+                                  </button>
+                                </div>
                               </div>
                             </div>
                           </div>
                         </td>
+                        <td>{task.memberName}</td>
                       </tr>
                     ))}
                 </tbody>
@@ -382,6 +473,7 @@ const Tasks = () => {
                     <th>Name</th>
                     <th>Dadline</th>
                     <th>Action</th>
+                    <th>Mamber</th>
                   </tr>
                 </thead>
                 {/* body */}
@@ -401,7 +493,7 @@ const Tasks = () => {
                         <td>
                           {/* Acion button (Completed) */}
                           <div className="flex">
-                            <div className="pb-2 flex gap-1">
+                            <div className=" flex gap-1">
                               <button
                                 className="rounded-md font-semibold text-xl text-red-500"
                                 onClick={() => handleDelete(task._id)}
@@ -414,9 +506,22 @@ const Tasks = () => {
                               >
                                 <MdUpdate />
                               </button>
+                              <div onClick={() => handlePassTaskId(task._id)}>
+                                <button
+                                  className="text-xl"
+                                  onClick={() =>
+                                    document
+                                      .getElementById("my_modal_2")
+                                      .showModal()
+                                  }
+                                >
+                                  <MdManageAccounts />
+                                </button>
+                              </div>
                             </div>
                           </div>
                         </td>
+                        <td>{task.memberName}</td>
                       </tr>
                     ))}
                 </tbody>
@@ -444,6 +549,7 @@ const Tasks = () => {
                     <th>Name</th>
                     <th>Dadline</th>
                     <th>Action</th>
+                    <th>Mamber</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -465,7 +571,7 @@ const Tasks = () => {
                         <td>
                           {/* Action button (delete) */}
                           <div className="flex">
-                            <div className="pb-2 flex gap-1">
+                            <div className=" flex gap-1">
                               <button
                                 className="rounded-md font-semibold text-xl text-red-500"
                                 onClick={() => handleDelete(task._id)}
@@ -478,9 +584,22 @@ const Tasks = () => {
                               >
                                 <MdUpdate />
                               </button>
+                              <div onClick={() => handlePassTaskId(task._id)}>
+                                <button
+                                  className="text-xl"
+                                  onClick={() =>
+                                    document
+                                      .getElementById("my_modal_2")
+                                      .showModal()
+                                  }
+                                >
+                                  <MdManageAccounts />
+                                </button>
+                              </div>
                             </div>
                           </div>
                         </td>
+                        <td>{task.memberName}</td>
                       </tr>
                     ))}
                 </tbody>

@@ -28,7 +28,7 @@ const Home = () => {
                 FREE TASK TIME TRACKING
               </h2>
               <h2 className="md:text-6xl text-center text-xl font-bold visible">
-                <Link href={"/tasks"}>
+                <Link href={"/projects"}>
                   <button className="btn glass btn-sm md:btn-md bg-[#daa11ed0] text-white font-bold uppercase hover:bg-white hover:text-black">
                     Explore
                   </button>

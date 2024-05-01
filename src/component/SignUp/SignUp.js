@@ -21,8 +21,7 @@ const SignUp = () => {
     const name = e.name;
     const email = e.email;
     const password = e.password;
-    console.log(e.photo.file.originFileObj
-    );
+    // console.log(e.photo.file.originFileObj);
 
     const image = e.photo.file.originFileObj
     ;
@@ -30,7 +29,7 @@ const SignUp = () => {
     const photo = imageData?.data?.display_url;
     const user = { name, email, photo};
 
-    console.log(user);
+    // console.log(user);
 
     try {
       const res = await createUserWithEmailAndPassword(email, password);
@@ -57,8 +56,8 @@ const SignUp = () => {
   return (
     <div className="styleSign h-[100vh] bg-blue-100">
       <div className="flex justify-center h-[80vh] items-center">
-        <div className="relative flex w-96 flex-col rounded-xl bg-blue-200 glass bg-clip-border text-gray-700 shadow-md">
-          <div className="relative mx-4 -mt-6 mb-4 grid h-28 place-items-center overflow-hidden rounded-xl bg-gradient-to-tr from-blue-600 to-blue-200 bg-clip-border text-white shadow-lg shadow-blue-500/40">
+        <div className="relative flex w-96 flex-col rounded-xl bg-blue-200 glass bg-clip-border text-gray-700 shadow-2xl">
+          <div className="relative mx-4 -mt-6 mb-4 grid h-28 place-items-center overflow-hidden rounded-xl bg-gradient-to-tr from-blue-400 to-blue-200 bg-clip-border text-white shadow-lg shadow-blue-500/40">
             <Typography.Title>Sign In</Typography.Title>
           </div>
 
@@ -128,7 +127,7 @@ const SignUp = () => {
               </div> */}
 
               <Button
-                className="bg-blue-400 text-white font-semibold"
+                className="bg-blue-400 glass text-white font-semibold"
                 htmlType="submit"
                 block
               >
