@@ -14,7 +14,7 @@ const TaskUpdate = () => {
 
   useEffect(() => {
     axios
-      .get("https://ph-job-tasks.vercel.app/tasks")
+      .get("https://66312420c92f351c03dc4ed6.mockapi.io/todo/tasks")
       .then((res) => setAllTasks(res.data))
       .catch((err) => console.log(err));
   }, []);
@@ -43,7 +43,7 @@ const TaskUpdate = () => {
     console.log("update-", name, title, dadline, description, position, author);
 
     axios
-      .put(`https://ph-job-tasks.vercel.app/tasks/${id}`, updateData)
+      .put(`https://66312420c92f351c03dc4ed6.mockapi.io/todo/tasks/${id}`, updateData)
       .then((res) => {
         toast.success("Task Updated");
         router.push("/tasks");

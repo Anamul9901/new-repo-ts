@@ -8,15 +8,17 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { IoTrashBinSharp } from "react-icons/io5";
 import { MdUpdate } from "react-icons/md";
+import { MdSearch } from "react-icons/md";
 
 const Tasks = () => {
   const [allTask, setAllTask] = useState([]);
   const [allProjects, setAllProjects] = useState([]);
   const [user, loading] = useAuthState(auth);
   const [storeId, setStoreId] = useState("");
+  const [search, setSearch] = useState("");
   const router = useRouter();
   const id = localStorage.getItem("id");
-  console.log(id);
+  // console.log(id);
 
   //  function of add-task button (add task of todo api)
   const handleAddTask = async (e) => {
@@ -42,7 +44,7 @@ const Tasks = () => {
 
     // post new task on todo API
     const res = await axios
-      .post("https://ph-job-tasks.vercel.app/tasks", updateData)
+      .post("https://66312420c92f351c03dc4ed6.mockapi.io/todo/tasks", updateData)
       .then((res) => {
         toast.success("Task added");
         refetch();
@@ -54,10 +56,10 @@ const Tasks = () => {
 
   // get todo api data (using TanstackQuery for easy refetch)
   const { data, refetch } = useQuery({
-    queryKey: ["todo"],
+    queryKey: ["tasks"],
     queryFn: async () => {
       const res = await axios
-        .get("https://ph-job-tasks.vercel.app/tasks")
+        .get(`https://66312420c92f351c03dc4ed6.mockapi.io/todo/tasks?name=${search}`)
         .then((res) => {
           setAllTask(res?.data);
         })
@@ -69,7 +71,7 @@ const Tasks = () => {
     queryKey: ["projects"],
     queryFn: async () => {
       const res = await axios
-        .get("https://ph-job-tasks.vercel.app/projects")
+        .get(`https://66312420c92f351c03dc4ed6.mockapi.io/todo/projects`)
         .then((res) => {
           setAllProjects(res?.data);
         })
@@ -77,7 +79,7 @@ const Tasks = () => {
     },
   });
   const findProjects = allProjects.find((project) => project._id == id);
-  console.log(findProjects);
+  // console.log(findProjects);
 
   // (redirect to login)  When user trying to go tasks page without login then he redirect to login page
   if (loading) {
@@ -92,19 +94,19 @@ const Tasks = () => {
     router.push("/login");
     return null;
   }
-  console.log(allTask);
+  // console.log(allTask);
   //  filter all task from todo API by login user (only user task shown)
   const filterTasks = allTask?.filter(
     (task) => task?.author == user?.email && task?.projectId == id
   );
-  console.log(filterTasks);
+  // console.log(filterTasks);
   // Update position of Todo API tasks
   // (shift To-do)
   const handleToDo = (id) => {
     const position = "to-do";
     const newData = { position };
     axios
-      .patch(`https://ph-job-tasks.vercel.app/tasks/${storeId}`, newData)
+      .put(`https://66312420c92f351c03dc4ed6.mockapi.io/todo/tasks/${storeId}`, newData)
       .then((res) => {
         refetch();
         toast.success("Shift Ongoing");
@@ -117,7 +119,7 @@ const Tasks = () => {
     const position = "ongoing";
     const newData = { position };
     axios
-      .patch(`https://ph-job-tasks.vercel.app/tasks/${storeId}`, newData)
+      .put(`https://66312420c92f351c03dc4ed6.mockapi.io/todo/tasks/${storeId}`, newData)
       .then((res) => {
         refetch();
         toast.success("Shift Ongoing");
@@ -130,7 +132,7 @@ const Tasks = () => {
     const position = "completed";
     const newData = { position };
     axios
-      .patch(`https://ph-job-tasks.vercel.app/tasks/${storeId}`, newData)
+      .put(`https://66312420c92f351c03dc4ed6.mockapi.io/todo/tasks/${storeId}`, newData)
       .then((res) => {
         refetch();
         toast.success("Shift Completed");
@@ -141,7 +143,7 @@ const Tasks = () => {
   // Delete function of todo data (position completed to delete)
   const handleDelete = (id) => {
     axios
-      .delete(`https://ph-job-tasks.vercel.app/tasks/${id}`)
+      .delete(`https://66312420c92f351c03dc4ed6.mockapi.io/todo/tasks/${id}`)
       .then((res) => {
         refetch();
         toast.success("Task Deleted");
@@ -150,12 +152,10 @@ const Tasks = () => {
   };
 
   const handleUpdate = (id) => {
-    console.log(id);
+    // console.log(id);
     router.push(`tasks/${id}`);
   };
   const dragStarted = (e, id) => {
-    // console.log("drag started", id);
-    // e.dataTransfer.setData("todoId", id);
     setStoreId(id);
   };
   console.log("store Id-", storeId);
@@ -165,21 +165,72 @@ const Tasks = () => {
     console.log("Dragging Over Now");
   };
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const searchText = e.target.search.value;
+    // console.log(searchText);
+    refetch();
+    setSearch(searchText);
+  };
+  console.log(search);
+
   return (
     <div className="max-w-7xl mx-auto h-screen">
       {/* Using Modal for add task on todo API */}
       <div>
         <div className="text-center pt-4">
-          <h2 className="text-white text-xl font-semibold">Name: {findProjects?.name}</h2>
+          <h2 className="text-white text-xl font-semibold">
+            Name: {findProjects?.name}
+          </h2>
         </div>
-        <div className="flex items-end justify-end pr-2 pt-4">
-          <button
-            className="btn btn-sm glass bg-white hover:text-[#ffffff] text-black font-bold"
-            onClick={() => document.getElementById("my_modal_1").showModal()}
-          >
-            Add Task
-          </button>
+        <div className="flex items-center justify-end pr-2">
+          <div className=" pr-2">
+            {/* add task start */}
+            <button
+              className="btn btn-sm glass bg-white hover:text-[#ffffff] text-black font-bold"
+              onClick={() => document.getElementById("my_modal_1").showModal()}
+            >
+              Add Task
+            </button>
+            {/* add task end */}
+          </div>
+          <div className="w-xl">
+            <input
+              type="date"
+              name="dadline"
+              required
+              placeholder="Author Name"
+              className="input input-bordered w-full"
+            />
+          </div>
+          {/* search option start */}
+          <div className="text-center text-white flex justify-center items-center">
+            <form onSubmit={handleSearch}>
+              <div className="flex items-center justify-end ">
+                <div>
+                  <input
+                    type="text"
+                    id="id"
+                    name="search"
+                    placeholder="Search by Name"
+                    className="w-[220px] border border-slate-400 bg-blue-200/15 rounded-l-md py-2 px-5 outline-none	"
+                  />
+                </div>
+                <div className="rounded-r-md ">
+                  <button
+                    type="submit"
+                    value="Search"
+                    className="px-2 w-[70px] border border-l-0 border-slate-400 rounded-r-md py-2 outline-none	bg-blue-200/15 hover:bg-slate-500 flex justify-center items-center"
+                  >
+                    <MdSearch className="text-2xl text-indigo-200/100" />
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+          {/* search option end */}
         </div>
+
         <dialog id="my_modal_1" className="modal">
           <div className="modal-box">
             <form method="dialog">

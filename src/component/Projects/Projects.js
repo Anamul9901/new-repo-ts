@@ -30,7 +30,7 @@ const Projects = () => {
 
     // post new task on todo API
     const res = await axios
-      .post("https://ph-job-tasks.vercel.app/projects", updateData)
+      .post("https://66312420c92f351c03dc4ed6.mockapi.io/todo/projects", updateData)
       .then((res) => {
         toast.success("Task added");
         refetch();
@@ -45,7 +45,7 @@ const Projects = () => {
     queryKey: ["project"],
     queryFn: async () => {
       const res = await axios
-        .get("https://ph-job-tasks.vercel.app/projects")
+        .get("https://66312420c92f351c03dc4ed6.mockapi.io/todo/projects")
         .then((res) => {
           setAllProject(res?.data);
         })
@@ -77,7 +77,7 @@ const Projects = () => {
   // Delete function of todo data (position completed to delete)
   const handleDelete = (id) => {
     axios
-      .delete(`https://ph-job-tasks.vercel.app/projects/${id}`)
+      .delete(`https://66312420c92f351c03dc4ed6.mockapi.io/todo/projects/${id}`)
       .then((res) => {
         refetch();
         toast.success("Project Deleted");
