@@ -11,10 +11,11 @@ import { MdUpdate } from "react-icons/md";
 
 const Tasks = () => {
   const [allTask, setAllTask] = useState([]);
+  const [allProjects, setAllProjects] = useState([]);
   const [user, loading] = useAuthState(auth);
   const [storeId, setStoreId] = useState("");
   const router = useRouter();
-  var id = localStorage.getItem("id");
+  const id = localStorage.getItem("id");
   console.log(id);
 
   //  function of add-task button (add task of todo api)
@@ -64,6 +65,20 @@ const Tasks = () => {
     },
   });
 
+  const { data2, refetch2 } = useQuery({
+    queryKey: ["projects"],
+    queryFn: async () => {
+      const res = await axios
+        .get("https://ph-job-tasks.vercel.app/projects")
+        .then((res) => {
+          setAllProjects(res?.data);
+        })
+        .catch(() => {});
+    },
+  });
+  const findProjects = allProjects.find((project) => project._id == id);
+  console.log(findProjects);
+
   // (redirect to login)  When user trying to go tasks page without login then he redirect to login page
   if (loading) {
     return (
@@ -77,12 +92,12 @@ const Tasks = () => {
     router.push("/login");
     return null;
   }
-console.log(allTask);
+  console.log(allTask);
   //  filter all task from todo API by login user (only user task shown)
   const filterTasks = allTask?.filter(
-    (task) => (task?.author == user?.email) && (task?.projectId == id)
+    (task) => task?.author == user?.email && task?.projectId == id
   );
-console.log(filterTasks);
+  console.log(filterTasks);
   // Update position of Todo API tasks
   // (shift To-do)
   const handleToDo = (id) => {
@@ -154,7 +169,10 @@ console.log(filterTasks);
     <div className="max-w-7xl mx-auto h-screen">
       {/* Using Modal for add task on todo API */}
       <div>
-        <div className="flex items-center justify-center pt-12">
+        <div className="text-center pt-4">
+          <h2 className="text-white text-xl font-semibold">Name: {findProjects?.name}</h2>
+        </div>
+        <div className="flex items-end justify-end pr-2 pt-4">
           <button
             className="btn btn-sm glass bg-white hover:text-[#ffffff] text-black font-bold"
             onClick={() => document.getElementById("my_modal_1").showModal()}
@@ -229,7 +247,7 @@ console.log(filterTasks);
       </div>
       {/* Finished Modal */}
 
-      <div className="md:flex justify-between pt-4 text-black px-2 rounded-lg gap-2">
+      <div className="md:flex justify-between pt-1 text-black px-2 rounded-lg gap-2">
         {/* All To-Do task */}
         <div
           droppable
