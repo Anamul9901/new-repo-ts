@@ -94,7 +94,7 @@ const SignUp = () => {
                 rules={[
                   {
                     required: true,
-                    message: "Please enter password",
+                    message: "Please enter password at least 6 characters",
                   },
                 ]}
                 label="Password"
